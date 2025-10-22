@@ -1,0 +1,42 @@
+groups:
+  - name: robot-cleaner-alerts
+    rules:
+      - alert: HighErrorRate
+        expr: rate(simulator_errors_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          service: robot-cleaner
+        annotations:
+          summary: "High error rate in Robot Cleaner service"
+          description: "Error rate is {{ $value }} per second"
+
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_server_requests_seconds_bucket[5m])) > 2
+        for: 3m
+        labels:
+          severity: warning
+          service: robot-cleaner
+        annotations:
+          summary: "High response time in Robot Cleaner service"
+          description: "95th percentile response time is {{ $value }} seconds"
+
+      - alert: ServiceDown
+        expr: up{job="robot-cleaner"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: robot-cleaner
+        annotations:
+          summary: "Robot Cleaner service is down"
+          description: "Service has been down for more than 1 minute"
+
+      - alert: HighMemoryUsage
+        expr: container_memory_usage_bytes{container="robot-cleaner"} / 1024 / 1024 > 512
+        for: 2m
+        labels:
+          severity: warning
+          service: robot-cleaner
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value }} MB"
