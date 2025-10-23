@@ -146,6 +146,7 @@ In Prometheus (http://localhost:9090/alerts), you should see your four alerting 
 Alerts are evaluated every evaluation_interval (15s in this case) and triggered when the conditions are met for the time specified in the for statement.
 
 ### Quickly Dashboard for Grafana:
+- Add a new dashboard.
 ```bash
 {
   "dashboard": {
@@ -175,6 +176,16 @@ Alerts are evaluated every evaluation_interval (15s in this case) and triggered 
   }
 }
 ```
+
+In Grafana:
+- Go to Connections → Data sources → Prometheus.
+- Check the URL field.
+- If both are in Docker Compose, it should be: http://prometheus:9090 and click "SAVE"
+
+Now you shold be able to query:
+- simulator_requests_total
+- simulator_errors_total
+- simulator_duration_seconds_count
 
 ---
 
